@@ -15,8 +15,20 @@ export const getDatabase = async (databaseId: string) => {
   try {
     const response = await notion.databases.query({
       database_id: databaseId,
+      filter: {
+        property: 'Published',
+        checkbox: {
+          equals: true,
+        },
+      },
+      sorts: [
+        {
+          property: 'Updated',
+          direction: 'descending',
+        },
+      ],
     });
-    console.log(response);
+    // console.log(response.results[0].cover);
     return response.results;
   } catch (error: unknown) {
     if (isNotionClientError(error)) {

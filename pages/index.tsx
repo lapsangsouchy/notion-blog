@@ -85,6 +85,12 @@ export default function Home({ posts }: { posts: any }) {
                 </h3>
 
                 <p className={styles.postDescription}>{date}</p>
+                <p className={styles.postDescription}>{post.description}</p>
+                <p className={styles.postDescription}>
+                  {post.properties.Tags['multi_select'].map((tag: any) => (
+                    <span key={tag.id}>#{tag.name} </span>
+                  ))}
+                </p>
                 <Link href={`/${post.id}`}>Read post →</Link>
               </li>
             );
