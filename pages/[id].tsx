@@ -4,9 +4,10 @@ import Image from 'next/image';
 import { getDatabase, getPage, getBlocks } from '../lib/notion';
 import Link from 'next/link';
 import { databaseId } from './index';
+
 import styles from './post.module.css';
 
-export const Text = ({ text }: { text: any }) => {
+export const TextBlock = ({ text }: { text: any }) => {
   if (!text) {
     return null;
   }
@@ -54,32 +55,32 @@ const renderBlock = (block: any) => {
     case 'paragraph':
       return (
         <p>
-          <Text text={value.rich_text} />
+          <TextBlock text={value.rich_text} />
         </p>
       );
     case 'heading_1':
       return (
         <h1>
-          <Text text={value.rich_text} />
+          <TextBlock text={value.rich_text} />
         </h1>
       );
     case 'heading_2':
       return (
         <h2>
-          <Text text={value.rich_text} />
+          <TextBlock text={value.rich_text} />
         </h2>
       );
     case 'heading_3':
       return (
         <h3>
-          <Text text={value.rich_text} />
+          <TextBlock text={value.rich_text} />
         </h3>
       );
     case 'bulleted_list_item':
     case 'numbered_list_item':
       return (
         <li>
-          <Text text={value.rich_text} />
+          <TextBlock text={value.rich_text} />
           {!!value.children && renderNestedList(block)}
         </li>
       );
@@ -88,7 +89,7 @@ const renderBlock = (block: any) => {
         <div>
           <label htmlFor={id}>
             <input type='checkbox' id={id} defaultChecked={value.checked} />{' '}
-            <Text text={value.rich_text} />
+            <TextBlock text={value.rich_text} />
           </label>
         </div>
       );
@@ -96,7 +97,7 @@ const renderBlock = (block: any) => {
       return (
         <details>
           <summary>
-            <Text text={value.rich_text} />
+            <TextBlock text={value.rich_text} />
           </summary>
           {value.children?.map((block: any) => (
             <Fragment key={block.id}>{renderBlock(block)}</Fragment>
@@ -145,6 +146,8 @@ const renderBlock = (block: any) => {
         </figure>
       );
     case 'bookmark':
+      // console.log(block);
+      // @TODO add in Puppetier function to create social card instead of just url
       const href = value.url;
       return (
         <a
@@ -176,7 +179,7 @@ export default function Post({ page, blocks }: { page: any; blocks: any }) {
 
       <article className={styles.container}>
         <h1 className={styles.name}>
-          <Text text={page.properties.Name.title} />
+          <TextBlock text={page.properties.Name.title} />
         </h1>
         <section>
           {blocks.map((block: any) => (

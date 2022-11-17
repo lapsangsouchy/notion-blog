@@ -1,7 +1,26 @@
 import Link from 'next/link';
 import styles from '../pages/index.module.css';
+import { createStyles, Card, Image, Text, AspectRatio } from '@mantine/core';
+
+const useStyles = createStyles((theme) => ({
+  card: {
+    transition: 'transform 150ms ease, box-shadow 150ms ease',
+
+    '&:hover': {
+      transform: 'scale(1.01)',
+      boxShadow: theme.shadows.md,
+    },
+  },
+
+  title: {
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+    fontWeight: 600,
+  },
+}));
 
 const PostCard = ({ post }: { post: any }) => {
+  const { classes } = useStyles();
+
   const date = new Date(post.last_edited_time).toLocaleString('en-US', {
     month: 'short',
     day: '2-digit',
@@ -9,11 +28,11 @@ const PostCard = ({ post }: { post: any }) => {
   });
 
   return (
-    <li key={post.id} className={styles.post}>
+    <Card key={post.id} p='md' radius='md' className={classes.card}>
       <div className={styles.postHead}>
         <Link href={`/${post.id}`}>
           {post.cover && (
-            <div className={styles.coverImg}>
+            <AspectRatio ratio={1920 / 1080}>
               <img
                 src={
                   post.cover.type === 'external'
@@ -22,30 +41,34 @@ const PostCard = ({ post }: { post: any }) => {
                 }
                 alt={post.properties.Name.title}
               />
-            </div>
+            </AspectRatio>
           )}
-          <p>{date}</p>
+          <Text
+            color='dimmed'
+            size='xs'
+            transform='uppercase'
+            weight={700}
+            mt='md'
+          >
+            {date}
+          </Text>
           <div className={styles.postTitle}>
             {post.icon && (
               <span>
                 {post.icon.type === 'emoji' ? (
                   post.icon.emoji
-                ) : post.icon.type === 'external' ? (
-                  <img
-                    style={{ width: 50 }}
-                    src={post.icon.external.url}
-                    alt='icon'
-                  />
                 ) : (
-                  <img
+                  <Image
                     style={{ width: 50 }}
-                    src={post.icon.file.url}
+                    src={post.icon[post.icon.type].url}
                     alt='icon'
                   />
                 )}
               </span>
             )}
-            <h3>{post.properties.Name.title[0]['plain_text']}</h3>
+            <Text className={classes.title} mt={5}>
+              {post.properties.Name.title[0]['plain_text']}
+            </Text>
           </div>
         </Link>
       </div>
@@ -69,7 +92,7 @@ const PostCard = ({ post }: { post: any }) => {
       </div>
 
       <Link href={`/${post.id}`}>Read post →</Link>
-    </li>
+    </Card>
   );
 };
 

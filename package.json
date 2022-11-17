@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/server": "^11.10.0",
+    "@mantine/core": "^5.8.0",
+    "@mantine/hooks": "^5.8.0",
+    "@mantine/next": "^5.8.0",
     "@notionhq/client": "^2.2.2",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
