@@ -48,19 +48,55 @@
 
 .post {
   margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  /* border: #dedede solid 0.5px; */
 }
 
-.postTitle {
-  margin-bottom: 10px;
+.postHead {
   font-size: 1.4rem;
 }
 
-.postTitle a {
+.postHead a {
   color: inherit;
+}
+
+.postHead p {
+  font-size: 15px;
+  opacity: 0.65;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.coverImg {
+  flex-shrink: 0;
+}
+
+.coverImg img {
+  height: 250px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.postTitle {
+  display: flex;
+  align-items: center;
+
+  padding-top: 0px;
+  line-height: 0;
 }
 
 .postDescription {
   margin-top: 0;
   margin-bottom: 12px;
-  opacity: 0.65;
+  /* opacity: 0.65; */
+}
+
+.tag {
+  opacity: 1;
+  color: rgba(255, 255 255, 1);
+  margin: 2px;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 15px;
 }

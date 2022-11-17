@@ -8,7 +8,7 @@ import {
 
 const notion = new Client({
   auth: process.env.NOTION_ACCESS_TOKEN,
-  logLevel: LogLevel.DEBUG,
+  // logLevel: LogLevel.DEBUG,
 });
 
 export const getDatabase = async (databaseId: string) => {
@@ -28,7 +28,7 @@ export const getDatabase = async (databaseId: string) => {
         },
       ],
     });
-    // console.log(response.results[0].cover);
+    // console.log(response.results[0].properties.Tags['multi_select']);
     return response.results;
   } catch (error: unknown) {
     if (isNotionClientError(error)) {
