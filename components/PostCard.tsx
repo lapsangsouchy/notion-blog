@@ -22,7 +22,7 @@ const useStyles = createStyles((theme) => ({
 const PostCard = ({ post }: { post: any }) => {
   const { classes } = useStyles();
 
-  const date = new Date(post.last_edited_time).toLocaleString('en-US', {
+  const date = new Date(post.created_time).toLocaleString('en-US', {
     month: 'short',
     day: '2-digit',
     year: 'numeric',
@@ -82,7 +82,7 @@ const PostCard = ({ post }: { post: any }) => {
               key={tag.id}
               style={
                 tag.color !== 'default'
-                  ? { backgroundColor: tag.color }
+                  ? { backgroundColor: tag.color, color: 'white' }
                   : { backgroundColor: 'green' }
               }
             >

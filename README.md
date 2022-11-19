@@ -1,34 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Social Asides With Notion and Next.js
+This is my ongoing project to fully build a blog or website with [Next.js](https://nextjs.org/) and [Notion API](https://developers.notion.com/) as a JAMStack application. Styled with [Mantine](https://mantine.dev/) and CSS Modules
+## Demo
 
-## Getting Started
+https://social-notion-blog.vercel.app/
 
-First, run the development server:
+If you'd like more of an explanation of how everything works, check the ["Explaining All This"](https://social-notion-blog.vercel.app/521021f4-fef2-45d2-86a5-4ad8d8ee2e9d) page
+
+For a list of what's to come  I've also included a [@TODO Post](https://social-notion-blog.vercel.app/d24d1388-fe2a-4196-9aa3-32545fc917bd) that I'll be updating as well
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
+  git clone https://github.com/lapsangsouchy/notion-blog.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+  npm install
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Environment Variables
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+Then you'll want to create an `.env.local` in the root directory and add your `NOTION_ACCESS_TOKEN` and `NOTION_BLOG_DATABASE_ID` variables.
 
-## Learn More
+[Here's the official Notion API Documentation for getting these variables as well as setting up a basic database](https://developers.notion.com/docs/create-a-notion-integration)
 
-To learn more about Next.js, take a look at the following resources:
+Once you've created your database, connected the integration, and added your environment variables, start the server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  npm run dev
+```
+## Feedback
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+I'm trying to implement as many features as possible from scratch for learning purposes. 
 
-## Deploy on Vercel
+If you want a primo Notion API Renderer, I can't stress how amazing [react-notion-x] (https://github.com/NotionX/react-notion-x) is.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+If you have any feedback, please reach out to to me at aleesmithnyc@gmail.com or feel free to contribute!

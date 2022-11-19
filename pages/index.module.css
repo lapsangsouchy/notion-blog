@@ -95,7 +95,7 @@
 
 .tag {
   opacity: 1;
-  color: rgba(255, 255 255, 1);
+  color: 'black';
   margin: 2px;
   padding: 5px;
   border-radius: 5px;

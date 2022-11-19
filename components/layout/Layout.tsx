@@ -9,7 +9,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconBrandYoutube, IconBrandInstagram } from '@tabler/icons';
+import { IconBrandLinkedin, IconBrandGithub } from '@tabler/icons';
 import { IconSun, IconMoonStars } from '@tabler/icons';
 import Link from 'next/link';
 
@@ -120,11 +120,23 @@ export default function Layout({ links }: HeaderMiddleProps) {
           className={classes.burger}
         />
         <Group className={classes.links} spacing={5}>
-          <ActionIcon size='lg'>
-            <IconBrandYoutube size={18} stroke={1.5} />
+          <ActionIcon
+            component='a'
+            href='https://www.linkedin.com/in/alexander-smith-bklyn/'
+            target='_blank'
+            rel='noopener noreferrer'
+            size='lg'
+          >
+            <IconBrandLinkedin size={25} stroke={1.5} />
           </ActionIcon>
-          <ActionIcon size='lg'>
-            <IconBrandInstagram size={18} stroke={1.5} />
+          <ActionIcon
+            component='a'
+            href='https://github.com/lapsangsouchy'
+            target='_blank'
+            rel='noopener noreferrer'
+            size='lg'
+          >
+            <IconBrandGithub size={25} stroke={1.5} />
           </ActionIcon>
         </Group>
 
