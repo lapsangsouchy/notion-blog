@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
 import styles from './index.module.css';
 import { getDatabase, getMeta } from '../lib/notion';
 import PostCard from '../components/PostCard';
@@ -11,8 +9,6 @@ import {
   Text,
   Overlay,
   createStyles,
-  ActionIcon,
-  useMantineColorScheme,
 } from '@mantine/core';
 
 export const databaseId: string = process.env.NOTION_BLOG_DATABASE_ID;
@@ -74,7 +70,7 @@ export default function Home({ posts, meta }: { posts: any; meta: any }) {
   return (
     <div>
       <Head>
-        <title>Notion Next.js blog</title>
+        <title>Social Asides</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
