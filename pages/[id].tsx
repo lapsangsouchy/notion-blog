@@ -192,7 +192,7 @@ const renderBlock = (block: any) => {
       return <blockquote key={id}>{value.rich_text[0].plain_text}</blockquote>;
     case 'code':
       const codeCaption = value.caption ? value.caption[0]?.plain_text : '';
-      console.log(value);
+      // console.log(value);
       if (value.language === 'plain text') {
         return (
           <figure>
@@ -204,7 +204,7 @@ const renderBlock = (block: any) => {
           </figure>
         );
       } else {
-        console.log(value.rich_text);
+        // console.log(value.rich_text);
         return (
           <figure>
             <figcaption>{value.language}</figcaption>
