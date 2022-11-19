@@ -192,7 +192,7 @@ const renderBlock = (block: any) => {
       return <blockquote key={id}>{value.rich_text[0].plain_text}</blockquote>;
     case 'code':
       const codeCaption = value.caption ? value.caption[0]?.plain_text : '';
-
+      console.log(value);
       if (value.language === 'plain text') {
         return (
           <figure>
@@ -204,11 +204,14 @@ const renderBlock = (block: any) => {
           </figure>
         );
       } else {
+        console.log(value.rich_text);
         return (
           <figure>
             <figcaption>{value.language}</figcaption>
             <Prism color='blue' language={value.language}>
-              {value.rich_text[0].text.content}
+              {value.rich_text.length > 0
+                ? value.rich_text[0][value.rich_text.type].content
+                : '// no code entered here'}
             </Prism>
             {codeCaption && <figcaption>{codeCaption}</figcaption>}
           </figure>
