@@ -1,13 +1,83 @@
 import { Fragment } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import { getDatabase, getPage, getBlocks } from '../lib/notion';
 import Link from 'next/link';
 import { databaseId } from './index';
+import {
+  Container,
+  Title,
+  Text,
+  Overlay,
+  createStyles,
+  Code,
+} from '@mantine/core';
+import { Prism } from '@mantine/prism';
 
 import styles from './post.module.css';
 
+const useStyles = createStyles((theme) => ({
+  wrapper: {
+    position: 'relative',
+    paddingTop: 180,
+    paddingBottom: 130,
+
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+
+    '@media (max-width: 520px)': {
+      paddingTop: 80,
+      paddingBottom: 50,
+    },
+  },
+
+  inner: {
+    position: 'relative',
+    zIndex: 1,
+  },
+
+  title: {
+    fontWeight: 800,
+    fontSize: 40,
+    letterSpacing: -1,
+    paddingLeft: theme.spacing.md,
+    paddingRight: theme.spacing.md,
+    color: theme.white,
+    marginBottom: theme.spacing.xs,
+    textAlign: 'center',
+    fontFamily: `Greycliff CF, ${theme.fontFamily}`,
+
+    '@media (max-width: 520px)': {
+      fontSize: 28,
+      textAlign: 'left',
+    },
+  },
+
+  highlight: {
+    color: theme.colors[theme.primaryColor][4],
+  },
+
+  description: {
+    color: theme.colors.gray[0],
+    textAlign: 'center',
+
+    '@media (max-width: 520px)': {
+      fontSize: theme.fontSizes.md,
+      textAlign: 'left',
+    },
+  },
+
+  code: {
+    fontFamily: 'monospace',
+    backgroundColor: theme.colorScheme === 'dark' ? 'lightgrey' : 'darkgrey',
+    padding: '2px 4px',
+    borderRadius: '2px',
+    color: theme.colorScheme === 'dark' ? theme.black : theme.white,
+  },
+}));
+
 export const TextBlock = ({ text }: { text: any }) => {
+  const { classes } = useStyles();
+
   if (!text) {
     return null;
   }
@@ -20,7 +90,7 @@ export const TextBlock = ({ text }: { text: any }) => {
       <span
         className={[
           bold ? styles.bold : '',
-          code ? styles.code : '',
+          code ? classes.code : '',
           italic ? styles.italic : '',
           strikethrough ? styles.strikethrough : '',
           underline ? styles.underline : '',
@@ -121,13 +191,30 @@ const renderBlock = (block: any) => {
     case 'quote':
       return <blockquote key={id}>{value.rich_text[0].plain_text}</blockquote>;
     case 'code':
-      return (
-        <pre className={styles.pre}>
-          <code className={styles.code_block} key={id}>
-            {value.rich_text[0].plain_text}
-          </code>
-        </pre>
-      );
+      const codeCaption = value.caption ? value.caption[0]?.plain_text : '';
+
+      if (value.language === 'plain text') {
+        return (
+          <figure>
+            <figcaption>&quot;raw&quot;</figcaption>
+            <Code color='blue' block key={id}>
+              {value.rich_text[0].plain_text}
+            </Code>
+            {codeCaption && <figcaption>{codeCaption}</figcaption>}
+          </figure>
+        );
+      } else {
+        return (
+          <figure>
+            <figcaption>{value.language}</figcaption>
+            <Prism color='blue' language={value.language}>
+              {value.rich_text[0].text.content}
+            </Prism>
+            {codeCaption && <figcaption>{codeCaption}</figcaption>}
+          </figure>
+        );
+      }
+
     case 'file':
       const src_file =
         value.type === 'external' ? value.external.url : value.file.url;
@@ -160,6 +247,7 @@ const renderBlock = (block: any) => {
         </a>
       );
     default:
+      // console.log(block);
       return `❌ Unsupported block (${
         type === 'unsupported' ? 'unsupported by Notion API' : type
       })`;
@@ -167,9 +255,11 @@ const renderBlock = (block: any) => {
 };
 
 export default function Post({ page, blocks }: { page: any; blocks: any }) {
+  const { classes } = useStyles();
   if (!page || !blocks) {
     return <div />;
   }
+
   return (
     <div>
       <Head>
@@ -178,9 +268,28 @@ export default function Post({ page, blocks }: { page: any; blocks: any }) {
       </Head>
 
       <article className={styles.container}>
-        <h1 className={styles.name}>
-          <TextBlock text={page.properties.Name.title} />
-        </h1>
+        <div
+          className={classes.wrapper}
+          style={{
+            backgroundImage: `url(${
+              page.cover
+                ? page.cover[page.cover.type].url
+                : 'https://images.unsplash.com/photo-1508614999368-9260051292e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80'
+            })`,
+          }}
+        >
+          <Overlay color='#000' opacity={0.65} zIndex={1} />
+          <div className={classes.inner}>
+            <Title className={classes.title}>
+              {page.properties.Name.title[0]['plain_text']}
+            </Title>
+            <Container size={640}>
+              <Text size='lg' className={classes.description}>
+                {page.properties.Description.rich_text[0]['plain_text']}
+              </Text>
+            </Container>
+          </div>
+        </div>
         <section>
           {blocks.map((block: any) => (
             <Fragment key={block.id}>{renderBlock(block)}</Fragment>

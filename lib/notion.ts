@@ -11,6 +11,30 @@ const notion = new Client({
   // logLevel: LogLevel.DEBUG,
 });
 
+export const getMeta = async (databaseId: string) => {
+  try {
+    const response = await notion.databases.retrieve({
+      database_id: databaseId,
+    });
+    // console.log(response);
+    return response;
+  } catch (error: unknown) {
+    if (isNotionClientError(error)) {
+      switch (error.code) {
+        case ClientErrorCode.RequestTimeout:
+          console.log(error);
+          break;
+        case APIErrorCode.ObjectNotFound:
+          console.log(error);
+          break;
+        case APIErrorCode.Unauthorized:
+          console.log(error);
+          break;
+      }
+    }
+  }
+};
+
 export const getDatabase = async (databaseId: string) => {
   try {
     const response = await notion.databases.query({
@@ -28,7 +52,7 @@ export const getDatabase = async (databaseId: string) => {
         },
       ],
     });
-    // console.log(response.results[0].properties.Tags['multi_select']);
+    // console.log(response);
     return response.results;
   } catch (error: unknown) {
     if (isNotionClientError(error)) {
@@ -49,6 +73,7 @@ export const getDatabase = async (databaseId: string) => {
 
 export const getPage = async (pageId: string) => {
   const response = await notion.pages.retrieve({ page_id: pageId });
+  // console.log(response.properties);
   return response;
 };
 
