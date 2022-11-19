@@ -210,7 +210,7 @@ const renderBlock = (block: any) => {
             <figcaption>{value.language}</figcaption>
             <Prism color='blue' language={value.language}>
               {value.rich_text.length > 0
-                ? value.rich_text[0][value.rich_text.type].content
+                ? value.rich_text[0][value.rich_text[0].type].content
                 : '// no code entered here'}
             </Prism>
             {codeCaption && <figcaption>{codeCaption}</figcaption>}
