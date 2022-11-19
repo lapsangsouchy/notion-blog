@@ -1,14 +1,12 @@
-// import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import {
   MantineProvider,
   ColorSchemeProvider,
   ColorScheme,
 } from '@mantine/core';
-import { useColorScheme } from '@mantine/hooks';
-import type { AppProps } from 'next/app';
+import NextApp, { AppProps, AppContext } from 'next/app';
 import Layout from '../components/layout/Layout';
-// import { getCookie, setCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 
 const links = [
   {
@@ -25,22 +23,23 @@ const links = [
   },
 ];
 
-export default function App({
-  Component,
-  pageProps,
-}: AppProps & { colorScheme: ColorScheme }) {
-  const preferredColorScheme = useColorScheme();
-  const [colorScheme, setColorScheme] =
-    useState<ColorScheme>(preferredColorScheme);
+export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+  const { Component, pageProps } = props;
+  const [colorScheme, setColorScheme] = useState<ColorScheme>(
+    props.colorScheme
+  );
+
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme =
       value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
-    // setCookie('mantine-color-scheme', nextColorScheme, {
-    //   maxAge: 60 * 60 * 24 * 30,
-    //   sameSite: 'none',
-    // });
+    setCookie('mantine-color-scheme', nextColorScheme, {
+      maxAge: 60 * 60 * 24 * 30,
+      sameSite: 'none',
+      secure: true,
+    });
   };
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
@@ -67,7 +66,11 @@ export default function App({
   );
 }
 
-// App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-//   // get color scheme from cookie
-//   colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
-// });
+App.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await NextApp.getInitialProps(appContext);
+  // get color scheme from cookie
+  return {
+    ...appProps,
+    colorScheme: getCookie('mantine-color-scheme', appContext.ctx) || 'dark',
+  };
+};
