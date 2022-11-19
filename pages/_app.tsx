@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext } from 'next';
+// import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 import {
   MantineProvider,
@@ -8,7 +8,7 @@ import {
 import { useColorScheme } from '@mantine/hooks';
 import type { AppProps } from 'next/app';
 import Layout from '../components/layout/Layout';
-import { getCookie, setCookie } from 'cookies-next';
+// import { getCookie, setCookie } from 'cookies-next';
 
 const links = [
   {
@@ -36,10 +36,10 @@ export default function App({
     const nextColorScheme =
       value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
-    setCookie('mantine-color-scheme', nextColorScheme, {
-      maxAge: 60 * 60 * 24 * 30,
-      sameSite: 'none',
-    });
+    // setCookie('mantine-color-scheme', nextColorScheme, {
+    //   maxAge: 60 * 60 * 24 * 30,
+    //   sameSite: 'none',
+    // });
   };
   return (
     <ColorSchemeProvider
@@ -67,7 +67,7 @@ export default function App({
   );
 }
 
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  // get color scheme from cookie
-  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
-});
+// App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
+//   // get color scheme from cookie
+//   colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
+// });

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import styles from '../pages/index.module.css';
 import { createStyles, Card, Image, Text, AspectRatio } from '@mantine/core';
