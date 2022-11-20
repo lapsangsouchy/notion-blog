@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import styles from './index.module.css';
+import styles from '../styles/index.module.css';
 import { getDatabase, getMeta } from '../lib/notion';
 import PostCard from '../components/PostCard';
 import {

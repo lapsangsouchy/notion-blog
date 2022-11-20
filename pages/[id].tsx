@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import { Prism } from '@mantine/prism';
 
-import styles from './post.module.css';
+import styles from '../styles/post.module.css';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {

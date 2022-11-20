@@ -5,7 +5,7 @@ import {
   APIErrorCode,
   ClientErrorCode,
 } from '@notionhq/client';
-import { NotionToMarkdown } from 'notion-to-md';
+// import { NotionToMarkdown } from 'notion-to-md';
 
 const notion = new Client({
   auth: process.env.NOTION_ACCESS_TOKEN,
@@ -53,7 +53,7 @@ export const getDatabase = async (databaseId: string) => {
         },
       ],
     });
-    console.log(response);
+    // console.log(response);
     return response.results;
   } catch (error: unknown) {
     if (isNotionClientError(error)) {
