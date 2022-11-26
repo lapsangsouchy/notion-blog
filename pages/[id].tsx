@@ -12,8 +12,11 @@ import {
   Code,
 } from '@mantine/core';
 import { Prism } from '@mantine/prism';
-
 import styles from '../styles/post.module.css';
+import dynamic from 'next/dynamic';
+
+// Prevents Video Player from creating mismatch UI hydration glitch
+const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -187,6 +190,25 @@ const renderBlock = (block: any) => {
           {caption && <figcaption>{caption}</figcaption>}
         </figure>
       );
+    case 'video':
+      const video_src =
+        value.type === 'external' ? value.external.url : value.file.url;
+      const video_caption = value.caption ? value.caption[0]?.plain_text : '';
+      if (value.type === 'external') {
+        return (
+          <figure>
+            <ReactPlayer url={video_src} controls={true} />
+            {video_caption && <figcaption>{video_caption}</figcaption>}
+          </figure>
+        );
+      } else {
+        return (
+          <figure>
+            <video src={video_src} width='500px' controls={true} />
+            {video_caption && <figcaption>{video_caption}</figcaption>}
+          </figure>
+        );
+      }
     case 'divider':
       return <hr key={id} />;
     case 'quote':
