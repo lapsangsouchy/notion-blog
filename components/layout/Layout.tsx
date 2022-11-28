@@ -83,35 +83,15 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface HeaderMiddleProps {
-  links: { link: string; label: string }[];
-}
-
-export default function Layout({ links }: HeaderMiddleProps) {
+export default function Layout() {
   const [opened, { toggle }] = useDisclosure(false);
-  const [active, setActive] = useState(links[0].link);
+
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === 'dark';
   const { classes, cx } = useStyles();
 
-  const items = links.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      className={cx(classes.link, {
-        [classes.linkActive]: active === link.link,
-      })}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
-      }}
-    >
-      {link.label}
-    </a>
-  ));
-
   return (
-    <Header height={56}>
+    <Header height={56} zIndex={100}>
       <Container className={classes.inner}>
         <Burger
           opened={opened}

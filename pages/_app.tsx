@@ -8,21 +8,6 @@ import NextApp, { AppProps, AppContext } from 'next/app';
 import Layout from '../components/layout/Layout';
 import { getCookie, setCookie } from 'cookies-next';
 
-const links = [
-  {
-    link: '/about',
-    label: 'Home',
-  },
-  {
-    link: '/learn',
-    label: 'Features',
-  },
-  {
-    link: '/pricing',
-    label: 'Pricing',
-  },
-];
-
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(
@@ -59,7 +44,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           }),
         }}
       >
-        <Layout links={links} />
+        <Layout />
         <Component {...pageProps} />
       </MantineProvider>
     </ColorSchemeProvider>

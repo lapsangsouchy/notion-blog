@@ -1,5 +1,7 @@
 import { Fragment } from 'react';
 import Head from 'next/head';
+import { GetStaticProps, GetStaticPaths, InferGetStaticPropsType } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 import { getDatabase, getPage, getBlocks } from '../lib/notion';
 import Link from 'next/link';
 import { databaseId } from './index';
@@ -10,13 +12,17 @@ import {
   Overlay,
   createStyles,
   Code,
+  Box,
+  Group,
 } from '@mantine/core';
+import TableOfContents from '../components/TableOfContents';
 import { Prism } from '@mantine/prism';
 import styles from '../styles/post.module.css';
-import dynamic from 'next/dynamic';
-
 // Prevents Video Player from creating mismatch UI hydration glitch
+import dynamic from 'next/dynamic';
 const ReactPlayer = dynamic(() => import('react-player'), { ssr: false });
+
+// Styles
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -124,42 +130,52 @@ const renderBlock = (block: any) => {
   const { type, id } = block;
   const value = block[type];
 
+  let blockColor;
+  const b4Underscore = new RegExp('^[^_]+');
+  if (!value.color || type === 'divider' || value.color === 'default') {
+    blockColor = 'none';
+  } else {
+    blockColor = value.color.match(b4Underscore)[0];
+  }
+
+  // console.log(blockColor);
+
   switch (type) {
     case 'paragraph':
       return (
-        <p>
+        <p style={{ backgroundColor: blockColor }}>
           <TextBlock text={value.rich_text} />
         </p>
       );
     case 'heading_1':
       return (
-        <h1>
+        <h1 id={`id${id}`} style={{ backgroundColor: blockColor }}>
           <TextBlock text={value.rich_text} />
         </h1>
       );
     case 'heading_2':
       return (
-        <h2>
+        <h2 id={`id${id}`} style={{ backgroundColor: blockColor }}>
           <TextBlock text={value.rich_text} />
         </h2>
       );
     case 'heading_3':
       return (
-        <h3>
+        <h3 id={`id${id}`} style={{ backgroundColor: blockColor }}>
           <TextBlock text={value.rich_text} />
         </h3>
       );
     case 'bulleted_list_item':
     case 'numbered_list_item':
       return (
-        <li>
+        <li style={{ backgroundColor: blockColor }}>
           <TextBlock text={value.rich_text} />
           {!!value.children && renderNestedList(block)}
         </li>
       );
     case 'to_do':
       return (
-        <div>
+        <div style={{ backgroundColor: blockColor }}>
           <label htmlFor={id}>
             <input type='checkbox' id={id} defaultChecked={value.checked} />{' '}
             <TextBlock text={value.rich_text} />
@@ -168,7 +184,7 @@ const renderBlock = (block: any) => {
       );
     case 'toggle':
       return (
-        <details>
+        <details style={{ backgroundColor: blockColor }}>
           <summary>
             <TextBlock text={value.rich_text} />
           </summary>
@@ -178,7 +194,7 @@ const renderBlock = (block: any) => {
         </details>
       );
     case 'child_page':
-      return <p>{value.title}</p>;
+      return <p style={{ backgroundColor: blockColor }}>{value.title}</p>;
     case 'image':
       const src =
         value.type === 'external' ? value.external.url : value.file.url;
@@ -196,23 +212,64 @@ const renderBlock = (block: any) => {
       const video_caption = value.caption ? value.caption[0]?.plain_text : '';
       if (value.type === 'external') {
         return (
-          <figure>
-            <ReactPlayer url={video_src} controls={true} />
-            {video_caption && <figcaption>{video_caption}</figcaption>}
+          <figure
+            style={{
+              position: 'relative',
+              paddingTop: '56.25%',
+              marginTop: '2rem',
+              marginBottom: '2rem',
+            }}
+          >
+            <ReactPlayer
+              url={video_src}
+              controls={true}
+              width='100%'
+              height='100%'
+              style={{ position: 'absolute', top: 0, left: 0 }}
+            />
+            {video_caption && (
+              <figcaption style={{ position: 'absolute' }}>
+                {video_caption}
+              </figcaption>
+            )}
           </figure>
         );
       } else {
         return (
-          <figure>
-            <video src={video_src} width='500px' controls={true} />
-            {video_caption && <figcaption>{video_caption}</figcaption>}
+          <figure
+            style={{
+              position: 'relative',
+              paddingTop: '56.25%',
+              marginTop: '2rem',
+              marginBottom: '2rem',
+            }}
+          >
+            <video
+              src={video_src}
+              width='100%'
+              height='100%'
+              style={{ position: 'absolute', top: 0, left: 0 }}
+              controls={true}
+            />
+            {video_caption && (
+              <figcaption
+                style={{ position: 'absolute', display: 'inline-block' }}
+              >
+                {video_caption}
+              </figcaption>
+            )}
           </figure>
         );
       }
+
     case 'divider':
       return <hr key={id} />;
     case 'quote':
-      return <blockquote key={id}>{value.rich_text[0].plain_text}</blockquote>;
+      return (
+        <blockquote style={{ backgroundColor: blockColor }} key={id}>
+          {value.rich_text[0].plain_text}
+        </blockquote>
+      );
     case 'code':
       const codeCaption = value.caption ? value.caption[0]?.plain_text : '';
       // console.log(value);
@@ -240,7 +297,6 @@ const renderBlock = (block: any) => {
           </figure>
         );
       }
-
     case 'file':
       const src_file =
         value.type === 'external' ? value.external.url : value.file.url;
@@ -280,7 +336,11 @@ const renderBlock = (block: any) => {
   }
 };
 
-export default function Post({ page, blocks }: { page: any; blocks: any }) {
+export default function Post({
+  page,
+  blocks,
+  links,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   const { classes } = useStyles();
   if (!page || !blocks) {
     return <div />;
@@ -317,6 +377,7 @@ export default function Post({ page, blocks }: { page: any; blocks: any }) {
           </div>
         </div>
         <section>
+          <TableOfContents links={links} />
           {blocks.map((block: any) => (
             <Fragment key={block.id}>{renderBlock(block)}</Fragment>
           ))}
@@ -329,16 +390,21 @@ export default function Post({ page, blocks }: { page: any; blocks: any }) {
   );
 }
 
-export const getStaticPaths = async () => {
+interface IParams extends ParsedUrlQuery {
+  id: string;
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
   const database = await getDatabase(databaseId);
+  const paths = database?.map((page) => ({ params: { id: page.id } }))!;
   return {
-    paths: database?.map((page) => ({ params: { id: page.id } })),
+    paths,
     fallback: true,
   };
 };
 
-export const getStaticProps = async (context: any) => {
-  const { id } = context.params;
+export const getStaticProps: GetStaticProps = async (context) => {
+  const { id } = context.params as IParams;
   const page = await getPage(id);
   const blocks = await getBlocks(id);
 
@@ -364,10 +430,41 @@ export const getStaticProps = async (context: any) => {
     return block;
   });
 
+  // interface tocHeadingProps {
+  //   links: { label: string; link: string; order: number }[];
+  // }
+
+  const getLinks = (blocksWithChildren: any[]) => {
+    const links: { label: string; link: string; order: number }[] = [];
+
+    blocksWithChildren.map((block: any) => {
+      const { type, id } = block;
+      const value = block[type];
+      let linkObj;
+      if (
+        type === 'heading_1' ||
+        type === 'heading_2' ||
+        type === 'heading_3'
+      ) {
+        linkObj = {
+          label: value.rich_text[0].text.content,
+          link: `#id${id}`,
+          order: Number(type.substr(-1)),
+        };
+        links.push(linkObj);
+      }
+    });
+    // console.log(tocHeadings);
+    return links;
+  };
+
+  const tocLinks = getLinks(blocksWithChildren);
+
   return {
     props: {
       page,
       blocks: blocksWithChildren,
+      links: tocLinks,
     },
     revalidate: 1,
   };
