@@ -212,53 +212,47 @@ const renderBlock = (block: any) => {
       const video_caption = value.caption ? value.caption[0]?.plain_text : '';
       if (value.type === 'external') {
         return (
-          <figure
-            style={{
-              position: 'relative',
-              paddingTop: '56.25%',
-              marginTop: '2rem',
-              marginBottom: '2rem',
-            }}
-          >
-            <ReactPlayer
-              url={video_src}
-              controls={true}
-              width='100%'
-              height='100%'
-              style={{ position: 'absolute', top: 0, left: 0 }}
-            />
-            {video_caption && (
-              <figcaption style={{ position: 'absolute' }}>
-                {video_caption}
-              </figcaption>
-            )}
-          </figure>
+          <div>
+            <div
+              style={{
+                position: 'relative',
+                paddingTop: '56.25%',
+                marginTop: '1rem',
+                marginBottom: '0rem',
+              }}
+            >
+              <ReactPlayer
+                url={video_src}
+                controls={true}
+                width='100%'
+                height='100%'
+                style={{ position: 'absolute', top: 0, left: 0 }}
+              />
+            </div>
+            {video_caption && <Text>{video_caption}</Text>}
+          </div>
         );
       } else {
         return (
-          <figure
-            style={{
-              position: 'relative',
-              paddingTop: '56.25%',
-              marginTop: '2rem',
-              marginBottom: '2rem',
-            }}
-          >
-            <video
-              src={video_src}
-              width='100%'
-              height='100%'
-              style={{ position: 'absolute', top: 0, left: 0 }}
-              controls={true}
-            />
-            {video_caption && (
-              <figcaption
-                style={{ position: 'absolute', display: 'inline-block' }}
-              >
-                {video_caption}
-              </figcaption>
-            )}
-          </figure>
+          <div>
+            <div
+              style={{
+                position: 'relative',
+                paddingTop: '56.25%',
+                marginTop: '1rem',
+                marginBottom: '0rem',
+              }}
+            >
+              <video
+                src={video_src}
+                width='100%'
+                height='100%'
+                style={{ position: 'absolute', top: 0, left: 0 }}
+                controls={true}
+              />
+            </div>
+            {video_caption && <Text>{video_caption}</Text>}
+          </div>
         );
       }
 
