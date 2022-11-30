@@ -38,7 +38,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
 
           globalStyles: (theme) => ({
             a: {
-              color: '#2563eb',
+              color: theme.colorScheme === 'dark' ? theme.white : '#2563eb',
               textDecoration: 'none',
             },
           }),

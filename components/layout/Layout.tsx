@@ -121,7 +121,7 @@ export default function Layout() {
         </Group>
 
         <Link href='/' className={classes.link}>
-          <h1>Social Asides</h1>
+          <h1>Alexander Lee Smith</h1>
         </Link>
 
         <Group spacing={0} className={classes.social} position='right' noWrap>
