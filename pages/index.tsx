@@ -2,76 +2,66 @@ import Head from 'next/head';
 import styles from '../styles/index.module.css';
 import { getDatabase, getMeta } from '../lib/notion';
 import PostCard from '../components/PostCard';
-
 import {
   SimpleGrid,
   Container,
   Title,
   Text,
   Overlay,
-  Group,
-  Button,
   createStyles,
-  Image,
 } from '@mantine/core';
 
 export const databaseId: string = process.env.NOTION_BLOG_DATABASE_ID;
 
 const useStyles = createStyles((theme) => ({
-  inner: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingTop: theme.spacing.xl * 4,
-    paddingBottom: theme.spacing.xl * 4,
+  wrapper: {
+    position: 'relative',
+    paddingTop: 180,
+    paddingBottom: 130,
 
-    [theme.fn.smallerThan('md')]: {
-      flexDirection: 'column',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+
+    '@media (max-width: 520px)': {
+      paddingTop: 80,
+      paddingBottom: 50,
     },
   },
 
-  content: {
-    maxWidth: 480,
-    marginRight: theme.spacing.xl,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    [theme.fn.smallerThan('md')]: {
-      maxWidth: '100%',
-      marginRight: 0,
-      marginBottom: '2rem',
-    },
+  inner: {
+    position: 'relative',
+    zIndex: 1,
   },
 
   title: {
-    color: theme.colorScheme === 'dark' ? theme.white : theme.black,
+    fontWeight: 800,
+    fontSize: 40,
+    letterSpacing: -1,
+    paddingLeft: theme.spacing.md,
+    paddingRight: theme.spacing.md,
+    color: theme.white,
+    marginBottom: theme.spacing.xs,
+    textAlign: 'center',
     fontFamily: `Greycliff CF, ${theme.fontFamily}`,
-    fontSize: 44,
-    lineHeight: 1.2,
-    fontWeight: 900,
 
-    [theme.fn.smallerThan('xs')]: {
+    '@media (max-width: 520px)': {
       fontSize: 28,
-    },
-  },
-
-  image: {
-    flex: 1,
-
-    [theme.fn.smallerThan('md')]: {
-      order: 2,
+      textAlign: 'left',
     },
   },
 
   highlight: {
-    position: 'relative',
-    backgroundColor: theme.fn.variant({
-      variant: 'light',
-      color: theme.primaryColor,
-    }).background,
-    borderRadius: theme.radius.sm,
-    padding: '4px 12px',
+    color: theme.colors[theme.primaryColor][4],
+  },
+
+  description: {
+    color: theme.colors.gray[0],
+    textAlign: 'center',
+
+    '@media (max-width: 520px)': {
+      fontSize: theme.fontSizes.md,
+      textAlign: 'left',
+    },
   },
 }));
 
@@ -84,7 +74,7 @@ export default function Home({ posts, meta }: { posts: any; meta: any }) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      {/* <header
+      <header
         className={classes.wrapper}
         style={{ backgroundImage: `url(${meta.cover[meta.cover.type].url})` }}
       >
@@ -97,41 +87,19 @@ export default function Home({ posts, meta }: { posts: any; meta: any }) {
             </Text>
           </Container>
         </div>
-      </header> */}
-
-      <Container>
-        <div className={classes.inner}>
-          <Container size={500} className={classes.image}>
-            <Image
-              radius='md'
-              alt='Alex Smith Headshot'
-              src='/me.jpg'
-              height={500}
-            />
-          </Container>
-          <div className={classes.content}>
-            <Title className={classes.title}>
-              {meta.title[0]['plain_text']}
-            </Title>
-            <Title order={2} color='dimmed' mt='md'>
-              {meta.description[0]['plain_text']}
-            </Title>
-          </div>
-        </div>
-      </Container>
-
+      </header>
       <main className={styles.container}>
         <div className={styles.heading}>
-          <h2>Projects</h2>
+          <h2>All Posts </h2>
         </div>
 
-        <Group py='lg'>
+        <Container py='xl'>
           <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'sm', cols: 1 }]}>
             {posts.map((post: any) => (
               <PostCard key={post.id} post={post} />
             ))}
           </SimpleGrid>
-        </Group>
+        </Container>
       </main>
     </div>
   );
